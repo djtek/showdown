@@ -3,13 +3,12 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    lint: {
-      all: ['src/**/*.js', 'test/**/*.js']
-    },
     jshint: {
       options: {
-        browser: true
-      }
+        browser: true,
+		ignores: "src/showdown.js"
+      },
+	  all: ['src/**/*.js', 'test/**/*.js']
     },
     simplemocha: {
       all: {
@@ -24,7 +23,8 @@ module.exports = function(grunt) {
     }
   });
   
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-simple-mocha');
 
-  grunt.registerTask('default', ['simplemocha', 'lint']);
+  grunt.registerTask('default', ['simplemocha', 'jshint']);
 };
