@@ -3,7 +3,22 @@
 //  ~~strike-through~~   ->  <del>strike-through</del>
 //
 
-(function(){
+(function (root, factory) {
+	if (typeof exports === 'object') { // Node.js
+		module.exports = factory();
+
+	} else if (typeof define === 'function' && define.amd) { // Require.JS
+		define(function (require, exports, module) {
+			var Showdown = require('showdown');
+			module.exports = factory(Showdown);
+		});
+	} else {
+		// Browser globals root is window
+		factory(root.Showdown);
+	}
+}(this, function (Showdown) { // Factory function, the implementation
+	"option strict";
+
     var github = function(converter) {
         return [
             {
@@ -18,8 +33,7 @@
         ];
     };
 
-    // Client-side export
-    if (typeof window !== 'undefined' && window.Showdown && window.Showdown.extensions) { window.Showdown.extensions.github = github; }
-    // Server-side export
-    if (typeof module !== 'undefined') module.exports = github;
-}());
+	if (Showdown && Showdown.extensions) Showdown.extensions.github = github;
+		
+	return github; // Export the constructor
+})); // Wrapping

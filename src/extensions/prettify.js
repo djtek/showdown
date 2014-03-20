@@ -4,7 +4,21 @@
 //  hints to showdown's HTML output.
 //
 
-(function(){
+(function (root, factory) {
+	if (typeof exports === 'object') { // Node.js
+		module.exports = factory();
+
+	} else if (typeof define === 'function' && define.amd) { // Require.JS
+		define(function (require, exports, module) {
+			var Showdown = require('showdown');
+			module.exports = factory(Showdown);
+		});
+	} else {
+		// Browser globals root is window
+		factory(root.Showdown);
+	}
+}(this, function (Showdown) { // Factory function, the implementation
+	"option strict";
 
     var prettify = function(converter) {
         return [
@@ -21,9 +35,7 @@
         ];
     };
 
-    // Client-side export
-    if (typeof window !== 'undefined' && window.Showdown && window.Showdown.extensions) { window.Showdown.extensions.prettify = prettify; }
-    // Server-side export
-    if (typeof module !== 'undefined') module.exports = prettify;
-
-}());
+	if (Showdown && Showdown.extensions) Showdown.extensions.prettify = prettify;
+		
+	return prettify; // Export the constructor
+})); // Wrapping
